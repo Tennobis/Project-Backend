@@ -4,16 +4,7 @@ import { User } from "../models/users.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 const registerUser = asyncHandler(async (req, res) => {
-  // get user details from frontend
-  //check validation of the user details -check for empty
-  //check if user is already registered : check via email or username
-  //check for images , check for avatar
-  //upload them to cloudinary,avatar
-  //create user object -create entry in db
-  //remove password and refresh token field from response
-  //check for user creation
-  //return res
-
+ 
   const { fullname, username, email, password } = req.body;
   console.log("Email: ", email);
   console.log("Password:", password);
