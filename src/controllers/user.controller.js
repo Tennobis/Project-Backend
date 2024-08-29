@@ -78,7 +78,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
-  if (!username || !email) {
+  if (!(username || email)) {
     throw new ApiError(400, "Username or email is required");
   }
   const user = User.findOne({
@@ -87,7 +87,7 @@ const loginUser = asyncHandler(async (req, res) => {
   if (!user) {
     throw new ApiError(404, "User not found or email not found");
   }
-  const passwordValidity = await user.isPaswordCorrect(password);
+  const passwordValidity = await user.isPasswordCorrect(password)
   if (!passwordValidity) {
     throw new ApiError(401, "Password incorrect");
   }
@@ -136,10 +136,9 @@ const logoutUser = asyncHandler(async (req, res) => {
   };
   return res
     .status(200)
-    .clearCookie("accessToken", accessToken)
-    .clearCookie("refreshToken", refreshToken).json(
-      new ApiResponse(200,{},"User logged Out successfully")
-    )
+    .clearCookie("accessToken", accessToken,options)
+    .clearCookie("refreshToken", refreshToken,options)
+    .json(new ApiResponse(200, {}, "User logged Out successfully"));
 });
 
 export { registerUser, loginUser, logoutUser };
