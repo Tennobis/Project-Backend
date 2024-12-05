@@ -290,7 +290,38 @@ const updateUserCoverImage=asyncHandler(async(req, res)=>{
   .status(200)
   .json(new ApiResponse, user,"Cover Image updated successfully")
 })
+// Wrtie the aggregate pipelines : 
 
+const getUserChannelProfile=asyncHandler(async(req, res)=>{
+  const {username}=req.params
+
+  if(!username?.trim()){
+    throw new ApiError(400,"username not found ")
+  }
+
+  const channel= await User.aggregate([
+    
+    {
+      $match:{
+        username:username?.toLowerCase()
+      }
+    },
+    {
+      $lookup:{
+        from:"subscriptions",
+        localField:"_id",
+        foreignField:"channel",
+        as:"suscribers"
+      }
+    },
+    {
+      $sum:{
+        localField:"subscriptions",
+        foreignField:"channel"
+      }
+    }
+  ])
+})
 
 export { 
   registerUser, 
