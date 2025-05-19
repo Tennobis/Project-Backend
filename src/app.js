@@ -14,11 +14,13 @@ app.use(cookieParser());
 //Import routes :
 
 import userRouter from "./routes/user.routes.js";
-import videoRouter from "./routes/video.routes.js"
+import videoRouter from "./routes/video.routes.js";
+import subscriptionRouter from "./routes/suscription.routes.js";
 
 //route declarations:
 
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/videos",videoRouter);
+app.use("/api/v1/videos", videoRouter);
+app.use("/api/v1/subscriptions", subscriptionRouter);
 
 export { app };

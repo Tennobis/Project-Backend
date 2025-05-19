@@ -48,10 +48,26 @@ const toggleSubscription = asyncHandler(async (req, res) => {
 
 const getUserChannelSubscribers = asyncHandler(async (req, res) => {
   const { channelId } = req.params;
+  const subscribers = await Subscription.find({ channel: channelId }).populate(
+    "subscriber",
+    "username fullname avatar"
+  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, subscribers, "Suscribers fetched Successfully"));
 });
 
 const getSubscribedChannels = asyncHandler(async (req, res) => {
-  const { channelId } = req.params;
+  const { subscriberId } = req.params;
+  const channels = await Subscription.find({
+    subscriber: subscriberId,
+  }).populate("channel", "username fullname avatar");
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, channels, "Suscribed channels fetched successfully")
+    );
 });
 
 export { toggleSubscription, getUserChannelSubscribers, getSubscribedChannels };
