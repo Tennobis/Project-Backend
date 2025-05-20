@@ -8,27 +8,35 @@ import {
   togglePublishStatus,
 } from "../controllers/video.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-router.route("/get-all-videos").get(getAllVideos);
-router.route("/publish-video").post(
-  upload.fields([
-    {
-      name: "videoFile",
-      maxCount: 1,
-    },
-    {
-      name: "thumbnail",
-      maxCount: 1,
-    },
-  ]),
-  publishAVideo
-);
-router.route("/get-video").get(getVideoById);
-router.route("/update-video").post(updateVideo);
-router.route("/delete-video").delete(deleteVideo);
-router.route("toggle-status").post(togglePublishStatus);
+router.use(verifyJWT);
 
+router
+  .route("/")
+  .get(getAllVideos)
+  .post(
+    upload.fields([
+      {
+        name: "videoFile",
+        maxCount: 1,
+      },
+      {
+        name: "thumbnail",
+        maxCount: 1,
+      },
+    ]),
+    publishAVideo
+  );
 
-export default router
+router
+  .route("/:videoId")
+  .get(getVideoById)
+  .delete(deleteVideo)
+  .patch(upload.single("thumbnail"), updateVideo);
+
+router.route("/toggle/publish/:videoId").patch(togglePublishStatus);
+
+export default router;
